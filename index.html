@@ -1,43 +1,33 @@
 <title>
-    Determinitistic Password Generator
+    Password Generator
 </title>
 
 <head>
-    <script >
-        async function getHash() {
-         const pk = document.getElementById("passkey").value;
-         console.log(pk);
-         if(pk=="") {
-            alert("Please enter a passkey");
-            return;
-         }
-
-         const idf = document.getElementById("identifier").value;
-         console.log(idf);
-         if(idf=="") {
-            alert("Please enter an identifier");
-            return;
-         }
-
-        var combined = pk + idf;
-        const msgUint8 = new TextEncoder().encode(combined); // encode as (utf-8) Uint8Array
-        const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8); // hash the message
-        const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
-        const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(""); // convert bytes to hex string
-        console.log(hashHex);
-        document.getElementById("output").innerHTML = hashHex;
-  } </script>
-
-
+    No need to remember your password again!
+    <script src="logic.js"></script>
 </head>
-<body>
-    
-        <label for="passkey">Secret PassKey:</label>
-        <input type="password" id="passkey" name="passkey"><br><br>
-        <label for="identifier">Identifier:</label>
-        <input type="text" id="identifier" name="identifier"><br><br>
-        <input type="submit" onclick="getHash()">
 
-        <p id="output"></p>
+<body>
+</br>
+    <label for="passkey">Secret PassKey:</label>
+    <input type="password" id="passkey" name="passkey"><br><br>
+    <label for="identifier">Identifier:</label>
+    <input type="text" id="identifier" name="identifier"><br><br>
+    
+    
+
+    <input type="checkbox" id="addUpper" checked><label for="addUpper">Add upper case characters</label>
+    <input type="checkbox" id="addSpecial" checked><label for="addSpecial">Add special characters</label>
+
+    <br><br><br>
+    <input type="button" onclick="getHash()" value="Generate Password">
+
+    <p id="output"></p>
+
+    <input type="button" onclick="show_pass()" value="Show Password">
+    <input type="button" onclick="copy_pass(10)" value="Copy 10 char">
+    <input type="button" onclick="copy_pass(20)" value="Copy 20 char">
+    <input type="button" onclick="copy_pass(0)" value="Copy all">
+
 </body>
 
