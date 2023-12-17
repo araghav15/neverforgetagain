@@ -7,16 +7,12 @@ function addSeasonings(pass_string, upper, special) {
     if(upper == true) {
         toggle = true;
         for(idx = 0; idx < pass_string.length; idx++) {
-            //console.log(idx)
             if (isNaN(pass_string[idx]) && pass_string[idx] == pass_string[idx].toLowerCase()) {
-                //console.log(pass_string[idx])
                 if(toggle == true) {
-                    //console.log("changing")
                     new_password = new_password + pass_string[idx].toUpperCase();
                 } else {
                     new_password = new_password + pass_string[idx];
                 }
-                //console.log(pass_string[idx])
                 toggle = !toggle;
             } else {
                 new_password = new_password + pass_string[idx];
@@ -30,13 +26,11 @@ function addSeasonings(pass_string, upper, special) {
         pass_string = new_password
     }
 
-    //console.log(pass_string)
-
     return pass_string;
 }
 
 
-async function getHash() {
+async function getPassword() {
     const pk = document.getElementById("passkey").value;
     if(pk=="") {
         alert("Please enter a passkey");
@@ -73,7 +67,6 @@ async function getHash() {
 }
 
 function copy_pass(length) {
-    //console.log(full_password.substring(0,length))
     
     if (length>0) {
         password_to_copy = full_password.substring(0,length)
