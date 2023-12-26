@@ -29,27 +29,57 @@ function addSeasonings(pass_string, upper, special) {
     return pass_string;
 }
 
-
 async function getPassword() {
-    const pk = document.getElementById("passkey").value;
-    if(pk=="") {
+
+    // Get the passkey from the textbox
+    const passkey = document.getElementById("passkey").value;
+    if(passkey=="") {
         alert("Please enter a passkey");
         return;
     }
 
-    const idf = document.getElementById("identifier").value;
-    if(idf=="") {
+    // Get the identifier from the textbox
+    const identifier = document.getElementById("identifier").value;
+    if(identifier=="") {
         alert("Please enter an identifier");
         return;
     }
 
-    var combined = pk + idf;
-    const msgUint8 = new TextEncoder().encode(combined); // encode as (utf-8) Uint8Array
-    const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8); // hash the message
-    const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
-    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join(""); // convert bytes to hex string
+    const enc = new TextEncoder();
 
-    full_password = hashHex;
+    // Create the basekey (this will be used in HMAC with HASH(identifier) as salt)
+    var baseKey = await crypto.subtle.importKey(
+        "raw",
+        enc.encode(passkey),
+        "PBKDF2",
+        false,
+        ["deriveBits", "deriveKey"],
+      );
+
+    // Salt = Hash(identifier) to increase the length
+    const salt = enc.encode(identifier);
+    const salt_buffer = await crypto.subtle.digest("SHA-512", salt);
+
+    const key = await crypto.subtle.deriveKey(
+        {
+          name: "PBKDF2",
+          salt: salt_buffer,
+          iterations: 1000000,
+          hash: "SHA-512",
+        },
+        baseKey,
+        { name: "HMAC", hash: "SHA-512"},
+        true,
+        ["sign"],
+      );
+
+    const keyBuffer = await crypto.subtle.exportKey("raw", key)
+    const keyBufferArray = Array.from(new Uint8Array(keyBuffer)); // convert buffer to byte array
+    const keyHex = keyBufferArray.map((b) => b.toString(16).padStart(2, "0")).join(""); // convert bytes to hex string
+
+    // keyHex is 512 characters. Extract 32 characters from that.
+    // Rest 480 would be entropy if someone wants to break the key!
+    full_password = keyHex.substring(128, 160);
     
     add_upper = false;
     add_special = false;
