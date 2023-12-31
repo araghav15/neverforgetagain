@@ -5,6 +5,7 @@
 <head>
     No need to remember your password again!
     <script src="logic.js"></script>
+    <meta charset="ISO-8859-1">
 </head>
 
 <body>
@@ -13,11 +14,10 @@
     <input type="password" id="passkey" name="passkey"><br><br>
     <label for="identifier">Identifier:</label>
     <input type="text" id="identifier" name="identifier"><br><br>
-    
-    
 
     <input type="checkbox" id="addUpper" checked><label for="addUpper">Add upper case characters</label>
     <input type="checkbox" id="addSpecial" checked><label for="addSpecial">Add special characters</label>
+    <input type="checkbox" id="addUnicode"><label for="addUnicode">Get it in Greek</label>
 
     <br><br><br>
     <input type="button" onclick="getPassword()" value="Generate Password">

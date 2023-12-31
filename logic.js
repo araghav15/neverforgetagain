@@ -1,6 +1,6 @@
 var full_password = ""
 
-function addSeasonings(pass_string, upper, special) {
+function addSeasonings(pass_string, upper, special, unicode) {
 
     new_password = ""
 
@@ -24,6 +24,14 @@ function addSeasonings(pass_string, upper, special) {
     if (special == true) {
         new_password = "$" + pass_string
         pass_string = new_password
+    }
+
+    if (unicode == true) {
+        new_password = ""
+        for(idx = 0; idx < pass_string.length; idx++) {
+            new_password = new_password + String.fromCharCode(pass_string[idx].charCodeAt() + 900);
+        }
+        pass_string = new_password;
     }
 
     return pass_string;
@@ -83,6 +91,7 @@ async function getPassword() {
     
     add_upper = false;
     add_special = false;
+    add_unicode = false;
 
     if (document.getElementById('addUpper').checked) {
         add_upper = true;
@@ -92,7 +101,11 @@ async function getPassword() {
         add_special = true;
     }
 
-    full_password = addSeasonings(full_password, add_upper, add_special)
+    if (document.getElementById('addUnicode').checked) {
+        add_unicode = true;
+    }
+
+    full_password = addSeasonings(full_password, add_upper, add_special, add_unicode)
     document.getElementById("output").innerHTML = "Password Generatred";
 }
 
